@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+
+        <meta name="format-detection" content="telephone=no" />        
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
+        <link class="include" rel="stylesheet" type="text/css" href="./js/jqplot/jquery.jqplot.min.css" />
+        <!--[if lt IE 9]><script language="javascript" type="text/javascript" src="./js/jqplot/excanvas.js"></script><![endif]-->
+
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
+        <script src="js/jquery-1.10.2.min.js"></script> 
+        <script type="text/javascript" src="js/jquery.mobile-1.4.0.min.js"></script>
+        <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>        
+        <script type="text/javascript" src="js/index.js"></script>
+        <title>Ficha Escolar</title>
+    </head>
+    <body>
+        <!-- Start of first page: #one -->
+
+        <div data-role="page" id="one"> 
+            <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">    
+                <div class="container">
+
+                    <div class="navbar-header">        
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+
+                        <a class="navbar-brand" href="#">Ficha Escolar</a>
+
+                    </div>
+
+                    <div class="nav navbar-nav navbar-right collapse navbar-collapse mainmenu">
+                        <a data-rel="back" class="btn btn-danger navbar-btn btn-black"><i class="glyphicon glyphicon-chevron-left"></i></a>
+                        <a href="./main.html" class="btn btn-danger navbar-btn btn-black"><i class="glyphicon glyphicon-home"></i></a>
+                        <a href="./dbsinc.html" class="btn btn-danger navbar-btn btn-black"><i class="glyphicon glyphicon-refresh"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div id="headJumbo">
+                <div class="jumbotron" data-role="header">
+                    <img src="./img/mineduc-small.jpg" />
+
+                    <h4 id="establecimientoNombre"></h4>
+                    <p class="lead"><br /><i>Gráfica consolidada del resultado de alumnos.</i></p>
+                    <small>
+                        <small>
+                                <small>
+                                    <table>
+                                        <tr>
+                                            <td><span class="tickLabel promovidos"></span> Promovidos </td>
+                                            <td><span class="tickLabel nopromovidos"></span> No promovidos </td>
+                                            <td><span class="tickLabel retirados"></span> Retirados </td>
+                                        </tr>
+                                    </table>                                
+                            </small>
+                        </small>
+                    </small>
+                    <div id="chart">
+                        <div id="graph">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container" id="contentBox">
+                <div role="main" class="main">
+
+
+                </div>
+            </div>
+            <div class="container">
+                <div role="main" class="main">
+                    <div class="row buttonList">
+                        <div rel="./calidad-resultado-detalle.html" class="col-xs-12 col-md-12 principalButton">Ver detalles 
+                            <span class="iconContainer"><i class="glyphicon glyphicon-search"></i></span>
+                        </div>                
+
+
+                    </div>
+
+                </div>
+
+
+
+
+            </div>
+        </div>
+
+        <script class="include" type="text/javascript" src="./js/jqplot/jquery.jqplot.min.js"></script>
+
+        <script class="include" language="javascript" type="text/javascript" src="./js/jqplot/plugins/jqplot.barRenderer.min.js"></script>
+        <script class="include" language="javascript" type="text/javascript" src="./js/jqplot/plugins/jqplot.categoryAxisRenderer.min.js"></script>
+        <script class="include" language="javascript" type="text/javascript" src="./js/jqplot/plugins/jqplot.pointLabels.min.js"></script>
+
+        <script type="text/javascript" src="phonegap.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+
+            });</script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                var db = window.openDatabase("fichaescolar", "1.0", "Ficha Escolar", 100000000);
+                var data = window.localStorage.getItem("info");
+                var info = $.parseJSON(data);
+                $("#establecimientoNombre").html(info.NombreEstablecimiento + "<br /><small>" + info.NombreMunicipio + ", " + info.NombreDepartamento + "</small><small></small>");
+                drawChart();
+                $(window).resize(function() {
+                    drawChart();
+                });
+                function drawChart() {
+                    var dato = $.parseJSON(window.localStorage.getItem("acumuladoResultado"));
+                    var anios = $.parseJSON(window.localStorage.getItem("years"));
+                    console.log(dato);
+                    //var steps = Math.ceil(mayor / 10);
+                    //alert(mayor);
+
+                    $("#chart").attr("width", $("#contentBox").width() + "px");
+                    var s1 = [];
+                    var s2 = [];
+                    var s3 = [];
+                    //var ticks = anios;
+                    var ticks = [];
+
+                    for (var i = 0; i < dato.length; i++) {
+                        //console.log(dato);
+                        var total = dato[i].promovidos + dato[i].nopromovidos + dato[i].retirados;
+                        var p = ( (dato[i].promovidos + dato[i].nopromovidos ) / total ) * 100;
+                        var np = ( / total ) * 100;
+                        var r = (dato[i].retirados / total ) * 100;
+                        
+                        ticks.push(dato[i].Anio);
+                        s1.push(p);
+                        s2.push(np);
+                        s3.push(r);
+                    }
+                    console.log(ticks);
+
+                    plot3 = $.jqplot('chart', [s1, s2, s3], {
+                        seriesColors: ["#C0D23E", "#F9D423", "#F03C02"],
+                        // Tell the plot to stack the bars.
+                        stackSeries: true,
+                        captureRightClick: true,
+                        seriesDefaults: {
+                            renderer: $.jqplot.BarRenderer,
+                            rendererOptions: {
+                                // Put a 30 pixel margin between bars.
+                                barMargin: 10,
+                                // Highlight bars when mouse button pressed.
+                                // Disables default highlighting on mouse over.
+                                highlightMouseDown: true
+                            },
+                            shadow: false,
+                            pointLabels: {show: true, }
+                        },
+                        legend: {
+                            show: false
+
+                        },
+                        axes: {
+                            
+                            // Use a category axis on the x axis and use our custom ticks.
+                            xaxis: {
+                                renderer: $.jqplot.CategoryAxisRenderer,
+                                ticks: ticks
+                            },
+                            // Pad the y axis just a little so bars can get close to, but
+                            // not touch, the grid boundaries.  1.2 is the default padding.
+                            yaxis: {
+                                pad: 1.05,
+                                color: "#000000",
+                                tickOptions:{formatString:'%d\%'}
+                            }
+                        },
+                        axesDefaults:{min:0}
+                    });
+                    // Bind a listener to the "jqplotDataClick" event.  Here, simply change
+                    // the text of the info3 element to show what series and ponit were
+                    // clicked along with the data for that point.
+                    $('#chart').bind('jqplotDataClick',
+                            function(ev, seriesIndex, pointIndex, data) {
+                                $('#graph').html('series: ' + seriesIndex + ', point: ' + pointIndex + ', data: ' + data);
+                            }
+                    );
+                }
+
+            });
+
+
+        </script>
+
+        <style type="text/css">
+            .ui-loading .ui-loader { display: block; }
+            .ui-loader { display: none; position: absolute; opacity: .85; z-index: 100; left: 50%; width: 200px; margin-left: -130px; margin-top: -35px; padding: 10px 30px; }
+            .jqplot-point-label {
+                color:#000;
+            }
+            
+            span.promovidos {
+                display: inline-block;
+                width: 14px;
+                height: 14px;
+                background: #C0D23E;                
+            }
+            
+            span.nopromovidos {
+                display: inline-block;
+                width: 14px;
+                height: 14px;
+                background: #F9D423;                
+            }
+            
+            span.retirados {
+                display: inline-block;
+                width: 14px;
+                height: 14px;
+                background: #F03C02;                
+            }
+        </style>
+    </body>
+</html>

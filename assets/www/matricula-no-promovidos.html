@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+
+        <meta name="format-detection" content="telephone=no" />        
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
+
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
+        <script src="js/jquery-1.10.2.min.js"></script> 
+        <script type="text/javascript" src="js/jquery.mobile-1.4.0.min.js"></script>
+        <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+        <!--<script type="text/javascript" src="js/Chart.min.js"></script>-->
+        <script class="include" type="text/javascript" src="./js/jqplot/jquery.jqplot.min.js"></script>
+        <script type="text/javascript" src="./js/jqplot/plugins/jqplot.canvasTextRenderer.min.js"></script>
+        <script type="text/javascript" src="./js/jqplot/plugins/jqplot.canvasAxisLabelRenderer.min.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+        <title>Ficha Escolar</title>
+        <style type="text/css">
+            .ui-loading .ui-loader { display: block; }
+            .ui-loader { display: none; position: absolute; opacity: .85; z-index: 100; left: 50%; width: 200px; margin-left: -130px; margin-top: -35px; padding: 10px 30px; }
+        </style>
+    </head>
+    <body>
+        <!-- Start of first page: #one -->
+
+        <div data-role="page" id="one"> 
+            <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">    
+                <div class="container">
+
+                    <div class="navbar-header">        
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+
+                        <a class="navbar-brand" href="#">Ficha Escolar</a>
+
+                    </div>
+
+                    <div class="nav navbar-nav navbar-right collapse navbar-collapse mainmenu">
+                        <a data-rel="back" class="btn btn-danger navbar-btn btn-black"><i class="glyphicon glyphicon-chevron-left"></i></a>
+                        <a href="./main.html" class="btn btn-danger navbar-btn btn-black"><i class="glyphicon glyphicon-home"></i></a>
+                        <a href="./dbsinc.html" class="btn btn-danger navbar-btn btn-black"><i class="glyphicon glyphicon-refresh"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div id="headJumbo">
+                <div class="jumbotron" data-role="header">
+                    <img src="./img/mineduc-small.jpg" />
+
+                    <h4 id="establecimientoNombre"></h4>
+                    <p class="lead"><br /><i>Grafica consolidada de No promovidos.</i></p>
+                    <div id="chart"></div>
+                </div>
+            </div>
+            <div class="container" id="contentBox">
+                <div role="main" class="main">
+
+                </div>
+            </div>
+            <div class="container">
+                <div role="main" class="main">
+                    <div class="row buttonList">
+                        <div rel="./matricula-no-promovidos-detalle.html" class="col-xs-12 col-md-12 principalButton">Ver detalles 
+                            <span class="iconContainer"><i class="glyphicon glyphicon-search"></i></span>
+                        </div>                
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="phonegap.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+
+
+                var db = window.openDatabase("fichaescolar", "1.0", "Ficha Escolar", 100000000);
+                var data = window.localStorage.getItem("info");
+                var info = $.parseJSON(data);
+
+                $("#establecimientoNombre").html(info.NombreEstablecimiento + "<br /><small>" + info.NombreMunicipio + ", " + info.NombreDepartamento + "</small><small></small>");
+                drawChart();
+
+                $(window).resize(function() {drawChart();});
+                function drawChart() {
+                    $("#chart *").remove();
+                    var anios = $.parseJSON(window.localStorage.getItem("years"));
+                    $("#chart").attr("width", $("#contentBox").width() + "px");
+                    var s1 = $.parseJSON(window.localStorage.getItem("acumuladoNoPromovidos"));
+                    console.log(s1);
+                    var data = [];
+                    var ticks = [];
+                    for (var i = 0; i < anios.length; i++) {
+                        data.push([anios[i], s1[i]]);
+                        ticks.push([anios[i], anios[i]]);
+                    }
+                    var linePlot = $.jqplot('chart', [data], {
+                        axes: {xaxis: {ticks: ticks}, yaxis: {pad: 1.05}},
+                        axesDefaults: {min: 0}
+                    });
+                }
+                
+
+            });
+
+
+        </script>
+
+
+    </body>
+</html>

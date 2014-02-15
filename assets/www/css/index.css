@@ -1,0 +1,150 @@
+@font-face {
+    font-family: 'awesome';
+    src: url('../ui/fonts/fontawesome-webfont.eot'); /* IE9 Compat Modes */
+    src: 
+         url('../ui/fonts/fontawesome-webfont.woff') format('woff'), /* Modern Browsers */
+         url('fontawesome-webfont.ttf')  format('truetype');
+         
+    }
+
+    @font-face {
+    font-family: 'openSansBold';
+    src: url('../ui/fonts/Open_Sans/OpenSans-Bold.ttf'); 
+    }
+
+    @font-face {
+    font-family: 'openSansRegular';
+    src: url('../ui/fonts/Open_Sans/OpenSans-Regular.ttf'); 
+    
+    }
+    @font-face {
+    font-family: 'openSansLight';
+    src: url('../ui/fonts/Open_Sans/OpenSans-Light.ttf'); 
+    
+    }
+    
+    @font-face {
+    font-family: 'openSansCBold';
+    src: url('../ui/fonts/Open_Sans_Condensed/OpenSans-CondBold.ttf');    
+    }
+
+    @font-face {
+    font-family: 'openSansCLight';
+    src: url('../ui/fonts/Open_Sans_Condensed/OpenSans-CondLight.ttf');    
+    }
+
+    @font-face {
+    font-family: 'ubuntuCond';
+    src: url('../ui/fonts/Ubuntu_Condensed/UbuntuCondensed-Regular.ttf');    
+    }
+
+    @font-face {
+    font-family: 'carme';
+    src: url('../ui/fonts/Carme/Carme-Regular.ttf');
+    }
+body {
+    background: #002142;
+    font-family: 'openSansLight' !important;    
+}
+
+
+#wrap {
+    padding: 0 10px ;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'openSansRegular' !important;
+}
+
+body .app-wrap-content {
+   
+}
+
+.navbar-brand {
+    color: #FFFFFF !important;
+    font-size: 2em;
+}
+.navbar.navbar-inverse.navbar-fixed-top {
+    color: #DDD;
+    padding: 0px 0;
+}
+
+.navbar.navbar-inverse.navbar-fixed-top h1{
+    text-align: center;
+    font-size: 2em;
+    margin: 10px 0px;
+
+}
+
+
+
+.jumbotron {
+  text-align: center;
+  background-color: transparent;
+  /*background: transparent url(../img/banner-sup.jpg) repeat-x center top;*/
+  padding: 10px;
+  border-radius: 0 0 0 0;
+  margin-top: 60px;
+  margin-bottom: 0;
+  padding: 0;
+  width: 100%;
+  background: #fff;
+
+}
+.jumbotron .btn {
+  font-size: 21px;
+  padding: 14px 24px;
+}
+
+.loadingBox {
+    background:#FFFFFF url(../img/103.gif) no-repeat center 140px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0.5;
+}
+
+dt, dd, .medText {
+    font-size: 1.1em;
+}
+
+
+dt {    
+    font-family: 'openSansRegular' !important;
+}
+.wrapDatosGenerales td {
+    font-weight: bold;
+    font-family: 'openSansRegular' !important;
+}
+
+
+
+div#headJumbo{
+  width: 100%;
+  background: #fff !important;
+  overflow: hidden;
+  color:#000;
+  padding: 0 25px;
+
+}
+
+.buttonList [class^="col-"] {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-top: 1px solid #0493D4;
+    border-bottom: 1px solid #0493D4;
+    color: #FFF1D0;
+    cursor: pointer;
+    font-size: 1.2em;
+}
+.buttonList .iconContainer{
+    display: inline-block;
+    float: right;
+    margin-right: 10px;
+}
+
+.btn-black {
+            background: #222222;
+            border: 0;
+           
+        }

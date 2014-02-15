@@ -1,0 +1,65 @@
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Open Sans Light'), local('OpenSans-Light'), url(http://themes.googleusercontent.com/static/fonts/opensans/v6/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff) format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans'), local('OpenSans'), url(http://themes.googleusercontent.com/static/fonts/opensans/v6/cJZKeOuBrn4kERxqtaUH3T8E0i7KZn-EPnyo3HZu7kw.woff) format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Open Sans Bold'), local('OpenSans-Bold'), url(http://themes.googleusercontent.com/static/fonts/opensans/v6/k3k702ZOKiLJc3WVjuplzHhCUOGz7vYGh680lGh-uXM.woff) format('woff');
+}
+
+/*----------Estilos propios de la aplicacion------------------*/
+.center-wrapper{
+  text-align: center;
+}
+.center-wrapper * {
+  /*margin: 0 auto;*/
+}
+
+.ui-li-desc {
+white-space: normal;
+}
+
+.ui-btn-text {
+white-space: normal;
+}
+
+.ui-li.ui-li-static.ui-btn-up-c{
+  font-size: 12px;
+}
+
+.datoimg{
+  width: 126px;
+  height: 44px;
+  background-image:url('images/boton.jpg');
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.txtdato{
+  width: 126px;
+  height: 44px;  
+  display: table-cell;  
+  vertical-align: middle;
+  text-align: center;
+  float: none;
+}
+
+#chart_div, #user_name, .titulo{margin: 0 auto; text-align: center;}
+#progressbar{margin-bottom: 5px;}
+
+#formPhone div.ui-input-text {/*width: 100%;*/}
+
+a.submenuitem.ui-btn.ui-btn-inline.ui-btn-icon-top.ui-btn-up-a span, a.submenuitem.ui-btn.ui-btn-inline.ui-btn-icon-top.ui-btn-hover-a span{
+  padding-top: 15px; !important;  
+}

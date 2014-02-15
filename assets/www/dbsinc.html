@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        
+        <meta name="format-detection" content="telephone=no" />        
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
+
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
+	<script type="text/javascript" charset="utf-8" src="js/cordova-2.5.0.js"></script>
+        <script src="js/jquery-1.10.2.min.js"></script> 
+        <script type="text/javascript" src="js/jquery.mobile-1.4.0.min.js"></script>
+	<script type="text/javascript" src="js/PluginCom.js"></script>
+        <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+        <title>Ficha Escolar</title>
+    </head>
+    <body>
+<!-- Start of first page: #one -->
+
+<div data-role="page" id="one"> 
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">    
+      <div class="container">
+        
+        <div class="navbar-header">        
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        
+        <a class="navbar-brand" href="#">Ficha Escolar</a>
+
+        </div>
+
+        <div class="nav navbar-nav navbar-right collapse navbar-collapse mainmenu">
+            <a data-rel="back" class="btn btn-danger navbar-btn btn-black"><i class="glyphicon glyphicon-chevron-left"></i></a>
+            <a href="./main.html" class="btn btn-danger navbar-btn btn-black"><i class="glyphicon glyphicon-home"></i></a>
+            <a href="./dbsinc.html" class="btn btn-danger navbar-btn btn-black"><i class="glyphicon glyphicon-refresh"></i></a>
+        </div>
+      </div>
+    </div>
+    <div id="headJumbo">
+        <div class="jumbotron" data-role="header">
+            <!-- <img src="./img/mineduc-small.jpg" /> -->
+            <p class="lead"><br /><i>Espere mientras la base de datos de los establecimientos se sincroniza.</i></p>
+            
+            
+            <p class="text-info text-primary">Esto podria demorar varios minutos.</p>
+        </div>
+        <div>
+            <p id="loadingBox">
+                <ol id="mensaje"></ol>
+                <div id="loadingImage"></div>
+            </p>
+        </div>
+    </div>
+    <div class="container">
+        <div role="main" class="main"><p  class="toreadSQL"></p>
+        </div>
+    </div>
+
+        
+
+    
+</div>
+        <!-- <script type="text/javascript" src="phonegap.js"></script>
+
+        <script type="text/javascript" src="js/app.js"></script> -->
+        <script type="text/javascript" src="js/populatedb.js"></script>
+        <script type="text/javascript">
+		
+            $(document).ready(function(){
+                $("body").on("click","#headJumbo div a.btn", function(){
+                    window.location = $(this).attr("href");
+                })
+            });
+        </script>
+        <style type="text/css">
+        .ui-loading .ui-loader { display: block; }
+        .ui-loader { display: none; position: absolute; opacity: .85; z-index: 100; left: 50%; width: 200px; margin-left: -130px; margin-top: -35px; padding: 10px 30px; }
+        #loadingImage {
+            margin: 25px auto;
+            background: url(img/103.gif) no-repeat center center;
+            width: 64px;
+            height: 64px;
+        }
+        </style>
+    </body>
+</html>

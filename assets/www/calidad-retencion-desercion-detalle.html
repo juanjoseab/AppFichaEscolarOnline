@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+
+        <meta name="format-detection" content="telephone=no" />        
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
+        <link class="include" rel="stylesheet" type="text/css" href="./js/jqplot/jquery.jqplot.min.css" />
+        <!--[if lt IE 9]><script language="javascript" type="text/javascript" src="./js/jqplot/excanvas.js"></script><![endif]-->
+
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
+        <script src="js/jquery-1.10.2.min.js"></script> 
+        <script type="text/javascript" src="js/jquery.mobile-1.4.0.min.js"></script>
+        <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>        
+        <script type="text/javascript" src="js/index.js"></script>
+        <style type="text/css">
+            .ui-loading .ui-loader { display: block; }
+            .ui-loader { display: none; position: absolute; opacity: .85; z-index: 100; left: 50%; width: 200px; margin-left: -130px; margin-top: -35px; padding: 10px 30px; }
+            .jqplot-point-label {
+                color:#000;
+            }
+
+            span.promovidos {
+                display: inline-block;
+                width: 14px;
+                height: 14px;
+                background: #C0D23E;                
+            }
+
+            span.nopromovidos {
+                display: inline-block;
+                width: 14px;
+                height: 14px;
+                background: #F9D423;                
+            }
+
+            span.retirados {
+                display: inline-block;
+                width: 14px;
+                height: 14px;
+                background: #F03C02;                
+            }
+
+            #chart1, #chart2 {
+                height: 300px;
+            }
+
+            #contentBox p, #contentBox ul li {
+                color: #fff;
+            }
+        </style>
+        <title>Ficha Escolar</title>
+    </head>
+    <body>
+        <!-- Start of first page: #one -->
+
+        <div data-role="page" id="one"> 
+            <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">    
+                <div class="container">
+
+                    <div class="navbar-header">        
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+
+                        <a class="navbar-brand" href="#">Ficha Escolar</a>
+
+                    </div>
+
+                    <div class="nav navbar-nav navbar-right collapse navbar-collapse mainmenu">
+                        <a data-rel="back" class="btn btn-danger navbar-btn btn-black"><i class="glyphicon glyphicon-chevron-left"></i></a>
+                        <a href="./main.html" class="btn btn-danger navbar-btn btn-black"><i class="glyphicon glyphicon-home"></i></a>
+                        <a href="./dbsinc.html" class="btn btn-danger navbar-btn btn-black"><i class="glyphicon glyphicon-refresh"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div id="headJumbo">
+                <div class="jumbotron" data-role="header">
+                    <img src="./img/mineduc-small.jpg" />
+
+                    <h4 id="establecimientoNombre"></h4>
+                    <p class="lead"><br /><i>Gráfica por genero del resultado de alumnos.</i></p>
+
+                    <h3>Mujeres</h3>
+                    <div id="chart1"></div>
+
+                    <small>
+                        <small>
+                            <small>
+                                <table>
+                                    <tr>
+                                        <td><span class="tickLabel promovidos"></span> Promovidos </td>
+                                        <td><span class="tickLabel nopromovidos"></span> No promovidos </td>
+                                        <td><span class="tickLabel retirados"></span> Retirados </td>
+                                    </tr>
+                                </table>                                
+                            </small>
+                        </small>
+                    </small>
+                    <h3>Hombres</h3>
+                    <div id="chart2"></div>
+                    <small>
+                        <small>
+                            <small>
+                                <table>
+                                    <tr>
+                                        <td><span class="tickLabel promovidos"></span> Promovidos </td>
+                                        <td><span class="tickLabel nopromovidos"></span> No promovidos </td>
+                                        <td><span class="tickLabel retirados"></span> Retirados </td>
+                                    </tr>
+                                </table>                                
+                            </small>
+                        </small>
+                    </small>
+                </div>
+            </div>
+            <div class="container" id="contentBox">
+                <div role="main" class="main">
+
+
+                </div>
+            </div>
+            <div class="container">
+                <div role="main" class="main" id="contentBox">
+                    <br />
+                    <p>El resultado final de los alumnos se determina según hayan aprobado o no los requisitos minimos para continuar sus estudios o si se retiran antes de concluir el ciclo escolar.<p>
+                    <p>En este establecimiento de cada 10 alumnos</p>
+                    <ul>
+                        <li><span id="promovidosnum" ></span> son promovidos</li>
+                        <li><span id="nopromovidosnum"></span> son no promovidos</li>
+                        <li><span id="retiradosnum"></span> se retiran antes de terminar el ciclo</li>
+                    </ul>
+                    <p id="students"> </p>
+                </div>
+
+
+
+
+            </div>
+        </div>
+
+        <script class="include" type="text/javascript" src="./js/jqplot/jquery.jqplot.min.js"></script>
+
+        <script class="include" language="javascript" type="text/javascript" src="./js/jqplot/plugins/jqplot.barRenderer.min.js"></script>
+        <script class="include" language="javascript" type="text/javascript" src="./js/jqplot/plugins/jqplot.categoryAxisRenderer.min.js"></script>
+        <script class="include" language="javascript" type="text/javascript" src="./js/jqplot/plugins/jqplot.pointLabels.min.js"></script>
+
+        <script type="text/javascript" src="phonegap.js"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+                var totales = 0;
+                var totalesp = 0;
+                var totalesn = 0;
+                var totalesr = 0;
+
+                var numr = 0;
+                var nump = 0;
+                var numn = 0;
+
+                var db = window.openDatabase("fichaescolar", "1.0", "Ficha Escolar", 100000000);
+                var data = window.localStorage.getItem("info");
+                var info = $.parseJSON(data);
+                $("#establecimientoNombre").html(info.NombreEstablecimiento + "<br /><small>" + info.NombreMunicipio + ", " + info.NombreDepartamento + "</small><small></small>");
+                drawChart();
+                $(window).resize(function() {
+                    $("#chart2 *, #chart1 *").remove();
+                    drawChart();
+                });
+                function drawChart() {
+
+                    var dato = $.parseJSON(window.localStorage.getItem("detalleResultado"));
+                    var anios = $.parseJSON(window.localStorage.getItem("years"));
+                    console.log(dato);
+                    //var steps = Math.ceil(mayor / 10);
+                    //alert(mayor);
+
+                    $("#chart1").attr("width", $("#contentBox").width() + "px");
+                    $("#chart2").attr("width", $("#contentBox").width() + "px");
+                    var s1m = [];
+                    var s2m = [];
+                    var s3m = [];
+                    var s1h = [];
+                    var s2h = [];
+                    var s3h = [];
+
+                    var ticks = [];
+
+
+                    for (var i = 0; i < dato.length; i++) {
+                        //console.log(dato);
+                        ticks.push(dato[i].Anio);
+                        var totalm = dato[i].promovidosM + dato[i].nopromovidosM + dato[i].retiradosM;
+                        var pm = (dato[i].promovidosM / totalm) * 100;
+                        var npm = (dato[i].nopromovidosM / totalm) * 100;
+                        var rm = (dato[i].retiradosM / totalm) * 100;
+
+                        var totalh = dato[i].promovidosH + dato[i].nopromovidosH + dato[i].retiradosH;
+                        var ph = (dato[i].promovidosH / totalh) * 100;
+                        var nph = (dato[i].nopromovidosH / totalh) * 100;
+                        var rh = (dato[i].retiradosH / totalh) * 100;
+
+                        totales += totalh + totalm;
+                        totalesp += dato[i].promovidosH + dato[i].promovidosM;
+                        totalesn += dato[i].nopromovidosH + dato[i].nopromovidosM;
+                        totalesr += dato[i].retiradosH + dato[i].retiradosM;
+
+                        s1m.push(pm);
+                        s2m.push(npm);
+                        s3m.push(rm);
+
+                        s1h.push(ph);
+                        s2h.push(nph);
+                        s3h.push(rh);
+                    }
+
+                    plot3 = $.jqplot('chart1', [s1m, s2m, s3m], {
+                        seriesColors: ["#C0D23E", "#F9D423", "#F03C02"],
+                        stackSeries: true,
+                        captureRightClick: true,
+                        seriesDefaults: {
+                            renderer: $.jqplot.BarRenderer,
+                            rendererOptions: {
+                                barMargin: 10,
+                                highlightMouseDown: true
+                            },
+                            shadow: false,
+                            pointLabels: {show: true, }
+                        },
+                        legend: {
+                            show: false
+                        },
+                        axes: {
+                            xaxis: {
+                                renderer: $.jqplot.CategoryAxisRenderer,
+                                ticks: ticks
+                            },
+                            yaxis: {
+                                pad: 1.05,
+                                color: "#000000",
+                                tickOptions: {formatString: '%d\%'}
+                            }
+                        },
+                        axesDefaults: {min: 0}
+                    });
+
+
+                    var plot4 = $.jqplot('chart2', [s1h, s2h, s3h], {
+                        seriesColors: ["#C0D23E", "#F9D423", "#F03C02"],
+                        stackSeries: true,
+                        captureRightClick: true,
+                        seriesDefaults: {
+                            renderer: $.jqplot.BarRenderer,
+                            rendererOptions: {
+                                barMargin: 10,
+                                highlightMouseDown: true
+                            },
+                            shadow: false,
+                            pointLabels: {show: true, }
+                        },
+                        legend: {
+                            show: false
+                        },
+                        axes: {
+                            xaxis: {
+                                renderer: $.jqplot.CategoryAxisRenderer,
+                                ticks: ticks
+                            },
+                            yaxis: {
+                                pad: 1.05,
+                                color: "#000000",
+                                tickOptions: {formatString: '%d\%'}
+                            }
+                        },
+                        axesDefaults: {min: 0}
+                    });
+
+
+
+                    $("#contentBox p img").remove();
+                    var lastYear = $.parseJSON(window.localStorage.getItem("acumuladoResultadoUA"));
+                                        
+
+                    for (var i = 0; i < lastYear.promovidos; i++) {
+                        $("#contentBox p#students").append('<img width="20%" src="./img/student-green.png" />');
+                    }
+
+                    for (var i = 0; i < lastYear.nopromovidos; i++) {
+                        $("#contentBox p#students").append('<img width="20%" src="./img/student-yellow.png" />');
+                    }
+
+                    for (var i = 0; i < lastYear.retirados; i++) {
+                        $("#contentBox p#students").append('<img width="20%" src="./img/student-red.png" />');
+                    }
+                    
+                    $("#promovidosnum").append('<strong class="label label-success">' + lastYear.promovidos + "</strong>");
+                    $("#nopromovidosnum").append('<strong class="label label-warning">' + lastYear.nopromovidos + "</strong>");
+                    $("#retiradosnum").append('<strong class="label label-danger">' + lastYear.retirados + "</strong>");
+                }
+
+            });
+
+
+        </script>
+
+
+    </body>
+</html>
