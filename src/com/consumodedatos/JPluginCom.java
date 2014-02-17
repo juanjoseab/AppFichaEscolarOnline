@@ -30,17 +30,16 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class JPluginCom extends CordovaPlugin {
 	
 	private enum Metodo {
-		getEstablecimientos, getEstablecimientoInfo, getNumEstablecimientos, getMatricula, getMatriculaNum;
+		getEstablecimientos, getEstablecimientoInfo, getNumEstablecimientos, getMatricula, getMatriculaNum, getMatriculaHistorica, getMatriculaHistoricaDetalle;
 	}
 	Context mContext;
 	
 	
 	@Override
-	public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-        Log.i("Proceso","se esta procesando en la clase nativa");
+	public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {        
         //this.getNumEstablecimientos(callbackContext);
 		Metodo met = Metodo.valueOf(action);
-		String init, numrows = "";
+		String init, numrows, codigoUdI = "";
 		switch(met) {		    
 		    case getEstablecimientos:
 		    	init = args.getString(0); 
@@ -52,30 +51,34 @@ public class JPluginCom extends CordovaPlugin {
 		    		            
 	            this.getEstablecimientos(init, numrows, callbackContext);
 			    break;*/
-		    case getNumEstablecimientos:
-		    	Log.i("Proceso","llego al case");
+		    case getNumEstablecimientos:		    	
 		    	//init = args.getString(0); 
 		    	
 	            this.getNumEstablecimientos(callbackContext);
 			    break;
-		    case getEstablecimientoInfo:
-		    	Log.i("Proceso","llego al case");
-		    	String codigoUdi = args.getString(0); 
-		    	
-		    	str =  this.getEstablecimientoInfo(codigoUdi);
+		    case getEstablecimientoInfo:		    	
+		    	codigoUdI = args.getString(0); 
+		    	str =  this.getEstablecimientoInfo(codigoUdI);
 		    	callbackContext.success(str);
 			    break;
+		    case getMatriculaHistorica:		    	
+		    	codigoUdI = args.getString(0);
+		    	str =  this.getMatriculaHistorica(codigoUdI);
+		    	callbackContext.success(str);
+			    break;
+		    case getMatriculaHistoricaDetalle:
+		    	Log.i("Proceso","llego al case MATRICULA DETALLE");
+		    	codigoUdI = args.getString(0);
+		    	str =  this.getMatriculaHistoricaDetalle(codigoUdI);
+		    	Log.d("DATA",str);
+		    	callbackContext.success(str);
+		    	break;
+		    	
 		}		
         return false;
     }
- 
-	
-	
-	
-	
+ 	
 	private String getEstablecimientos(String init, String numrows){
-		
-		
 			SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 			Date today = Calendar.getInstance().getTime(); 
 			Log.i("INIT TIME",df.format(today));
@@ -117,7 +120,21 @@ public class JPluginCom extends CordovaPlugin {
 		/*
 			*/			
 		//callbackContext.success("PARSEANDO EL JSON");		
-}
+	}
+	
+	private String getMatriculaHistorica(String codigoUDI){		
+		String res = "";
+		ConsumoFichaEscolar consumo = new ConsumoFichaEscolar();
+		res = (String) consumo.getMatriculaHistorica(codigoUDI);		
+		return res;
+	}
+	
+	private String getMatriculaHistoricaDetalle(String codigoUDI){		
+		String res = "";
+		ConsumoFichaEscolar consumo = new ConsumoFichaEscolar();
+		res = (String) consumo.getMatriculaHistoricaDetalle(codigoUDI);		
+		return res;
+	}
 	
 	private void getNumEstablecimientos(CallbackContext callbackContext){		
 		Log.i("Success","llegamos al metodo");		

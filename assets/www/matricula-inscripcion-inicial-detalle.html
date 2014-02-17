@@ -117,7 +117,7 @@
 
                 var table = "";
                 var anos = $.parseJSON(window.localStorage.getItem("years"));
-                var detalle = $.parseJSON(window.localStorage.getItem("matriculaInicialDetalle"));
+                var detalle = JSON.parse(window.localStorage.getItem("matriculaDetalle"));
 
                 for (var i = 0; i < anos.length; i++) {
                     var totalM = 0;
@@ -125,14 +125,14 @@
                     table += '<table class="table table-condensed table-bordered"><tr><th rowspan="2">Grado</th><th colspan="2">' + anos[i] + '</th></tr>';
                     table += '<tr><th>Hombres</th><th>Mujeres</th></tr>';
                     for (var j = 0; j < detalle.length; j++) {
-                        if (detalle[j].Anio == anos[i]) {
-                            table += '<tr><td>' + detalle[j].grado + '</td><td>' + detalle[j].hombres + '</td><td>' + detalle[j].mujeres + '</td></tr>';
-                            totalM += detalle[j].mujeres;
-                            totalH += detalle[j].hombres;
+                        if ((detalle[j].Anio * 1) == (anos[i] * 1 ))  {
+                            table += '<tr><td>' + detalle[j].grado + '</td><td>' + detalle[j].inscripcionInicialHombres + '</td><td>' + detalle[j].inscripcionInicialMujeres + '</td></tr>';
+                            totalM += (detalle[j].inscripcionInicialMujeres * 1);
+                            totalH += (detalle[j].inscripcionInicialHombres * 1);
                         }
                     }
                     table += '<tr><td>Total</td><td>' + totalH + '</td><td>' + totalM + '</td></tr>';
-                    table += '</table>';
+                    table += '</table>';                    
                 }
                 $("#detalle").append(table);
             });

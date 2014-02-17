@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8" />
-        
+
         <meta name="format-detection" content="telephone=no" />        
         <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -18,151 +18,169 @@
         <title>Ficha Escolar</title>
     </head>
     <body>
-<!-- Start of first page: #one -->
+        <!-- Start of first page: #one -->
 
-<div data-role="page" id="one"> 
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">    
-      <div class="container">
-        
-        <div class="navbar-header">        
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
-        
-        <a class="navbar-brand" href="#">Ficha Escolar</a>
+        <div data-role="page" id="one"> 
+            <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">    
+                <div class="container">
 
-        </div>
+                    <div class="navbar-header">        
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
 
-        <div class="nav navbar-nav navbar-right collapse navbar-collapse mainmenu">
-            <a data-rel="back" class="btn btn-danger navbar-btn btn-black"><i class="glyphicon glyphicon-chevron-left"></i></a>
-            <a href="./main.html" class="btn btn-danger navbar-btn btn-black"><i class="glyphicon glyphicon-home"></i></a>
-            <a href="./dbsinc.html" class="btn btn-danger navbar-btn btn-black"><i class="glyphicon glyphicon-refresh"></i></a>
-        </div>
-      </div>
-    </div>
-    <div id="headJumbo">
-        <div class="jumbotron" data-role="header">
-            <img src="./img/mineduc-small.jpg" />            
-            <p class="lead"><br /><i>Indique el código del establecimiento.</i></p>
-        </div>
-    </div>
-    <div class="container">
-        
+                        <a class="navbar-brand" href="#">Ficha Escolar</a>
 
-        <div role="main" class="main">
-            <br />
-            <form role="form" id="searchForm">
-              <div class="form-group">                
-                <input type="text" class="form-control input-lg" id="establecimientoCodigo" placeholder="Código de establecimiento">
-                <button type="button" class="btn btn-lg btn-danger cancelar">Cancelar</button>
-                <button type="submit" class="btn btn-lg btn-black buscar">Buscar</button> 
-              </div> 
-              <p style="text-align:center;">
+                    </div>
 
-                
-              </p>
-            </form>
+                    <div class="nav navbar-nav navbar-right collapse navbar-collapse mainmenu">
+                        <a data-rel="back" class="btn btn-danger navbar-btn btn-black"><i class="glyphicon glyphicon-chevron-left"></i></a>
+                        <a href="./main.html" class="btn btn-danger navbar-btn btn-black"><i class="glyphicon glyphicon-home"></i></a>
+                        <a href="./dbsinc.html" class="btn btn-danger navbar-btn btn-black"><i class="glyphicon glyphicon-refresh"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div id="headJumbo">
+                <div class="jumbotron" data-role="header">
+                    <img src="./img/mineduc-small.jpg" />            
+                    <p class="lead"><br /><i>Indique el código del establecimiento.</i></p>
+                </div>
+            </div>
+            <div class="container">
+
+
+                <div role="main" class="main">
+                    <br />
+                    <form role="form" id="searchForm">
+                        <div class="form-group">                
+                            <input type="text" class="form-control input-lg" id="establecimientoCodigo" placeholder="Código de establecimiento">
+                            <button type="button" class="btn btn-lg btn-danger cancelar">Cancelar</button>
+                            <button type="submit" class="btn btn-lg btn-black buscar">Buscar</button> 
+                        </div> 
+                        <p style="text-align:center;">
+
+
+                        </p>
+                    </form>
+
+                </div>
+            </div>
             
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="myModalLabel">Datos no encontrados</h4>
+
+                        </div>
+                        <div class="modal-body">
+                            No se ha encontrado ningún establecimiento con el código indicado.
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-
-        
-
-    
-        
-</div>
-    <script type="text/javascript" src="phonegap.js"></script>
+        <script type="text/javascript" src="phonegap.js"></script>
         <!-- <script type="text/javascript" src="js/app.js"></script> -->
         <script type="text/javascript">
-            $(document).ready(function(){
+            $(document).ready(function() {
 
                 var db;
 
-                $("body").on("click","button.btn.cancelar", function(){                    
-                    window.location='./main.html';
+                $("body").on("click", "button.btn.cancelar", function() {
+                    window.location = './main.html';
                 });
 
-                $("body").on("submit","form#searchForm", function(){
-                    var code = $("input#establecimientoCodigo").val(); 
-                    window.getEstablecimientoInfo(code,function (response){
-                        var info = response.replace(']','').replace('[','');
+                $("body").on("submit", "form#searchForm", function() {
+                    var code = $("input#establecimientoCodigo").val();
+                    window.getEstablecimientoInfo(code, function(response) {
+                        if (response == "[]") {
+                            $('#myModal').modal('show');
+                            return false;
+                        }
+
+                        var info = response.replace(']', '').replace('[', '');
                         window.localStorage.setItem("info", info);
                         window.location = "./establecimiento-inicio.html";
                         //alert(response);
                     })
 
                     /*
-                    db = window.openDatabase("fichaescolar", "1.0", "Ficha Escolar", 100000000); 
-                    db.transaction(
-                        function(tx){
-                            var code = $("input#establecimientoCodigo").val(); 
-                            tx.executeSql('SELECT * FROM establecimiento WHERE CodigoUDI = ?', 
-                            [code], 
-                            function(t,r){
-
-                                if(r.rows.length > 0 ){
-                                    var info = JSON.stringify(r.rows.item(0));
-                                    window.localStorage.setItem("info", info);
-                                    window.location = "./establecimiento-inicio.html";
-                                    return false;
-                                }else{
-                                   alert("no se encontr\u00f3 el establecimiento con c\u00f3digo :" + code);
-                                   return false;
-                                }
-                                
-                            }, 
-                            function(t,e){
-                                alert("Error" + e.message); 
-                                return false;                           
-                            });
-                        }, 
-                        function(tx,e){
-                            alert("Error processing SQL: " + err.code + " : " + err.message);
-                            return false;
-                        }
-                    );*/
+                     db = window.openDatabase("fichaescolar", "1.0", "Ficha Escolar", 100000000); 
+                     db.transaction(
+                     function(tx){
+                     var code = $("input#establecimientoCodigo").val(); 
+                     tx.executeSql('SELECT * FROM establecimiento WHERE CodigoUDI = ?', 
+                     [code], 
+                     function(t,r){
+                     
+                     if(r.rows.length > 0 ){
+                     var info = JSON.stringify(r.rows.item(0));
+                     window.localStorage.setItem("info", info);
+                     window.location = "./establecimiento-inicio.html";
+                     return false;
+                     }else{
+                     alert("no se encontr\u00f3 el establecimiento con c\u00f3digo :" + code);
+                     return false;
+                     }
+                     
+                     }, 
+                     function(t,e){
+                     alert("Error" + e.message); 
+                     return false;                           
+                     });
+                     }, 
+                     function(tx,e){
+                     alert("Error processing SQL: " + err.code + " : " + err.message);
+                     return false;
+                     }
+                     );*/
                     return false;
                 });
 
-                   
-                    /*function querySuccess(tx, results) {
-                        Alert("Returned rows = " + results.rows.length);
-                        // this will be true since it was a select statement and so rowsAffected was 0
-                        if (!results.rowsAffected) {
-                            Alert('No rows affected!');
-                            return false;
-                        }
-                        // for an insert statement, this property will return the ID of the last inserted row
-                        Alert("Nombre establecimiento = " + results.rows.item(0).NombreEstablecimiento);
-                    }*/
+
+                /*function querySuccess(tx, results) {
+                 Alert("Returned rows = " + results.rows.length);
+                 // this will be true since it was a select statement and so rowsAffected was 0
+                 if (!results.rowsAffected) {
+                 Alert('No rows affected!');
+                 return false;
+                 }
+                 // for an insert statement, this property will return the ID of the last inserted row
+                 Alert("Nombre establecimiento = " + results.rows.item(0).NombreEstablecimiento);
+                 }*/
 
 
             });
         </script>
         <style type="text/css">
-        .ui-loading .ui-loader { display: block; }
-        .ui-loader { display: none; position: absolute; opacity: .85; z-index: 100; left: 50%; width: 200px; margin-left: -130px; margin-top: -35px; padding: 10px 30px; }
-        input#establecimientoCodigo {
-            border-radius: 0 0 0 0;
-            width: 100%;
-            margin-bottom: 2px;
-        }
-        button.buscar, button.cancelar {
-            border-radius: 0 0 0 0;
-            border: 0;
-            width: 50%;
-            margin: 0;
-            float: left;
-            font-family: 'openSansBold' !important;
-        }
-        .btn-black {
-            background: #0092d7;
-            color: #ddd;
+            .ui-loading .ui-loader { display: block; }
+            .ui-loader { display: none; position: absolute; opacity: .85; z-index: 100; left: 50%; width: 200px; margin-left: -130px; margin-top: -35px; padding: 10px 30px; }
+            input#establecimientoCodigo {
+                border-radius: 0 0 0 0;
+                width: 100%;
+                margin-bottom: 2px;
+            }
+            button.buscar, button.cancelar {
+                border-radius: 0 0 0 0;
+                border: 0;
+                width: 50%;
+                margin: 0;
+                float: left;
+                font-family: 'openSansBold' !important;
+            }
+            .btn-black {
+                background: #0092d7;
+                color: #ddd;
 
-        }
+            }
 
         </style>
     </body>

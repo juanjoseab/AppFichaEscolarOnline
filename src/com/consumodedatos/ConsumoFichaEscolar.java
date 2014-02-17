@@ -19,9 +19,12 @@ public class ConsumoFichaEscolar {
     private static final String getMatricula = "getMatricula";
     private static final String getNumMatricula = "getNumMatricula";
     private static final String getEstablecimientoInfo = "getEstablecimientoInfo";
+    private static final String getMatriculaHistorica = "getMatriculaHistoricaAcumuladaByCodigoUDI";
+    private static final String getMatriculaHistoricaDetalle = "getMatriculaHistoricaDetalleByCodigoUDI";
+    
     
     // Fichero de definicion del servcio web
-    private static final String url = "http://107.21.223.125:9090/AppFicha/WSApp?wsdl";
+    private static final String url = "http://107.21.223.125:9090/WebServiceFichaEscolar/WSApp?wsdl";
     //tag para interpretacion de xml 
     public static final String TAG = "Resultado";
 	
@@ -109,12 +112,9 @@ public class ConsumoFichaEscolar {
     }
 	
 	public String getEstablecimientoInfo(String codigoUDI){
-    	try {
-    		
+    	try {    		
     		SoapObject request = new SoapObject(namespace, getEstablecimientoInfo);
-            request.addProperty("codigoUDI", codigoUDI);
-            
-            
+            request.addProperty("codigoUDI", codigoUDI);            
             // Modelo el Sobre
             SoapSerializationEnvelope sobre = new SoapSerializationEnvelope(SoapEnvelope.VER11);
             sobre.dotNet = false;
@@ -122,32 +122,19 @@ public class ConsumoFichaEscolar {
             
             Log.d("TRACE", "sobre preparado");
             String resultado = "";
-         try {
-				
-            // Modelo el transporte
-            HttpTransportSE transporte = new HttpTransportSE(url);           
-            // Llamada
-            transporte.call(getEstablecimientos, sobre);            
-            //String resultado = "";
-            resultado = sobre.getResponse().toString();
-            //Log.i("sobre", sobre.getResponse().toString());
-            
-     	} catch (Exception e) {
-     		Log.e("ERROR 1 ", e.getMessage().toString());
-     		Log.e("ERROR 2 ", e.getStackTrace().toString());     		
-		}
-          /*  try{
-            	
-            	//sobre.getResponse();
-            	Log.i("DEBUG OK", resultado);
-            }catch(Exception e){
-            	Log.e("DEBUG ERROR", e.getMessage());
-            }*/
-            
-            //Log.i("TRACE","After last try catch");
-            return resultado;
-            
-            
+	         try {					
+	            // Modelo el transporte
+	            HttpTransportSE transporte = new HttpTransportSE(url);           
+	            // Llamada
+	            transporte.call(getEstablecimientos, sobre);            
+	            //String resultado = "";
+	            resultado = sobre.getResponse().toString();
+	            
+	     	} catch (Exception e) {
+	     		Log.e("ERROR 1 ", e.getMessage().toString());
+	     		Log.e("ERROR 2 ", e.getStackTrace().toString());     		
+			}
+            return resultado;            
          
         } catch (Exception e) {
         	String err = (e.getMessage()==null)?"SD Card failed":e.getMessage();
@@ -156,5 +143,74 @@ public class ConsumoFichaEscolar {
             return "ERROR : " + e.getMessage().toString() ;
         }
     }
+	
+	public String getMatriculaHistorica(String codigoUDI){
+		try {    		
+    		SoapObject request = new SoapObject(namespace, getMatriculaHistorica);
+            request.addProperty("codigoUDI", codigoUDI);            
+            // Modelo el Sobre
+            SoapSerializationEnvelope sobre = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            sobre.dotNet = false;
+            sobre.setOutputSoapObject(request);            
+            Log.d("TRACE", "sobre preparado");
+            String resultado = "";
+	         try {					
+	            // Modelo el transporte
+	            HttpTransportSE transporte = new HttpTransportSE(url);           
+	            // Llamada
+	            transporte.call(getEstablecimientos, sobre);            
+	            //String resultado = "";
+	            resultado = sobre.getResponse().toString();
+	            
+	     	} catch (Exception e) {
+	     		Log.e("ERROR 1 ", e.getMessage().toString());
+	     		Log.e("ERROR 2 ", e.getStackTrace().toString());     		
+			}
+	        //Log.d("Data", resultado );
+	         Log.d("DEBUG", "DATOS OBTENIDOS CON EXITO");
+            return resultado;            
+         
+        } catch (Exception e) {
+        	String err = (e.getMessage()==null)?"SD Card failed":e.getMessage();
+        	Log.e("ERROR : DeBUG ", err );
+            //return e.getMessage();
+            return "ERROR : " + e.getMessage().toString() ;
+        }
+	}
+	
+	
+	public String getMatriculaHistoricaDetalle(String codigoUDI){
+		try {    		
+    		SoapObject request = new SoapObject(namespace, getMatriculaHistoricaDetalle);
+            request.addProperty("codigoUDI", codigoUDI);            
+            // Modelo el Sobre
+            SoapSerializationEnvelope sobre = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            sobre.dotNet = false;
+            sobre.setOutputSoapObject(request);            
+            Log.d("TRACE", "sobre preparado");
+            String resultado = "";
+	         try {					
+	            // Modelo el transporte
+	            HttpTransportSE transporte = new HttpTransportSE(url);           
+	            // Llamada
+	            transporte.call(getMatriculaHistoricaDetalle, sobre);            
+	            //String resultado = "";
+	            resultado = sobre.getResponse().toString();
+	            
+	     	} catch (Exception e) {
+	     		Log.e("ERROR 1 ", e.getMessage().toString());
+	     		Log.e("ERROR 2 ", e.getStackTrace().toString());     		
+			}
+	        //Log.d("Data", resultado );
+	         Log.d("DEBUG", "DATOS OBTENIDOS CON EXITO");
+            return resultado;            
+         
+        } catch (Exception e) {
+        	String err = (e.getMessage()==null)?"SD Card failed":e.getMessage();
+        	Log.e("ERROR : DeBUG ", err );
+            //return e.getMessage();
+            return "ERROR : " + e.getMessage().toString() ;
+        }
+	}
 
 }

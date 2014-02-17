@@ -12,6 +12,8 @@
         <script src="js/jquery-1.10.2.min.js"></script> 
         <script type="text/javascript" src="js/jquery.mobile-1.4.0.min.js"></script>
         <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+        <script type="text/javascript" charset="utf-8" src="js/cordova-2.5.0.js"></script>
+        <script type="text/javascript" src="js/PluginCom.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
         <title>Ficha Escolar</title>
     </head>
@@ -79,599 +81,116 @@
             
         </div>
 
-        
+    </div>  
 
     
 </div>
         <script type="text/javascript" src="phonegap.js"></script>
         <script type="text/javascript">
             $(document).ready(function(){
+                document.addEventListener("deviceready", function(){
                 var data = window.localStorage.getItem("info");
                 var info = $.parseJSON(data);
 
                 $("#establecimientoNombre").html(info.NombreEstablecimiento + "<br /><small>" + info.NombreMunicipio + ", " + info.NombreDepartamento + "</small><small></small>");
-                var db = window.openDatabase("fichaescolar", "1.0", "Ficha Escolar", 100000000); 
+                //var db = window.openDatabase("fichaescolar", "1.0", "Ficha Escolar", 100000000); 
                 var years = [];
-                    getYears();
-                    getInscripcionInicialData();
-                    getTotalInscripcionInicialDataGenero();
-                    getInscripcionInicialDetalle();
+                var totalesMatriculaInicial = [];
+                var inscripcionInicialMujeres = [];
+                var inscripcionInicialHombres = [];
 
-                    //llamada a funciones para graficas de repitentes
-                    getRepitentesData();
-                    getRepitentesDataGenero();
-                    getRepitentesDetalle();
+                var acumuladoRepitentes = [];
+                var repitentesMujeres = [];
+                var repitentesHombres = [];
 
-                    //Llamada a funciones para graficas de inscripcion final
-                    getInscripcionFinalData();
-                    getInscritosFinalGenero();
-                    getInscritosFinalDetalle();
+                var acumuladoInscripcionFinal = [];
+                var inscripcionFinalMujeres = [];
+                var inscripcionFinalHombres = [];
 
+                var acumuladoRetirados = [];
+                var retiradosHombres = [];
+                var retiradosMujeres = [];
 
-                    //Llamada a funciones para graficas de retirados
-                    getRetiradosData();
-                    getRetiradosGenero();
-                    getRetiradosDetalle();
+                var acumuladoPromovidos = [];
+                var promovidosHombres = [];
+                var promovidosMujeres = [];
 
-                    //Llamada a funciones para graficas de retirados
-                    getPromovidosData();
-                    getPromovidosGenero();
-                    getPromovidosDetalle();
+                var acumuladoNoPromovidos = [];
+                var noPromovidosHombres = [];
+                var noPromovidosMujeres = [];
 
+                window.getMatriculaHistorica(info.CodigoUDI, function (datos){
+                  var json = JSON.parse(datos);
+                  
+                  if(json.length > 0){
+                    for(var i= 0; i < json.length; i++){
+                      years.push((json[i].Anio) * 1 );
 
-                    //Llamada a funciones para graficas de retirados
-                    getNoPromovidosData();
-                    getNoPromovidosGenero();
-                    getNoPromovidosDetalle();
+                      totalesMatriculaInicial.push((json[i].inscripcionInicialAcumulada * 1 ));
+                      inscripcionInicialMujeres.push((json[i].inscripcionInicialMujeres * 1 ));
+                      inscripcionInicialHombres.push((json[i].inscripcionInicialHombres * 1 ));
 
-                    function getYears(){
-                        //console.log($.parseJSON(window.localStorage.getItem("years")));
-                        window.localStorage.removeItem("years");
-                        db.transaction(
-                            function(tx){
-                                  tx.executeSql('SELECT DISTINCT Anio AS year FROM matricula WHERE CodigoUDI = ?', 
-                                  [info.CodigoUDI],
-                                  function(tx,r){
-                                    var y = [];
-                                    if(r.rows.length > 0){
-                                        for(var i = 0; i<r.rows.length; i++){
-                                            years.push(r.rows.item(i).year);
-                                        }                                        
-                                        window.localStorage.setItem("years",JSON.stringify(years));
-                                        
-                                    }
-                                    
-                                        console.log(years);
-                                     
-                                  },
-                                  function(tx,e){
-                                     alert("Error" + e.message); 
-                                      return false; 
-                                  });
-                              },
-                              function(tx,e){
-                                  alert("Error al procesar SQL: " + e.code + " : " + e.message);
-                                  return false;
-                              }
-                            )
+                      acumuladoRepitentes.push((json[i].repitentesAcumulados * 1 ));
+                      repitentesHombres.push((json[i].repitentesHombres * 1 ));
+                      repitentesMujeres.push((json[i].repitentesMujeres * 1 ));
+
+                      acumuladoInscripcionFinal.push((json[i].inscripcionFinalAcumulada * 1 ));
+                      inscripcionFinalHombres.push((json[i].inscripcionFinalHombres * 1 ));
+                      inscripcionFinalMujeres.push((json[i].inscripcionFinalMujeres * 1 ));
+
+                      acumuladoRetirados.push((json[i].retiradosAcumulados * 1 ));
+                      retiradosHombres.push((json[i].retiradosHombres * 1 ));
+                      retiradosMujeres.push((json[i].retiradosMujeres * 1 ));
+
+                      acumuladoPromovidos.push((json[i].promovidosAcumulados * 1 ));
+                      promovidosHombres.push((json[i].promovidosHombres * 1 ));
+                      promovidosMujeres.push((json[i].promovidosMujeres * 1 ));
+
+                      acumuladoNoPromovidos.push((json[i].nopromovidosAcumulados * 1 ));
+                      noPromovidosHombres.push((json[i].nopromovidosHombres * 1 ));
+                      noPromovidosMujeres.push((json[i].nopromovidosMujeres * 1 ));
                     }
+                    window.localStorage.setItem("years",JSON.stringify(years));
 
-                    function getInscripcionInicialData(){
-                         window.localStorage.removeItem("totalesMatriculaInicial");
-                        //SELECT Anio, SUM(InscritosInicialHombres + InscritosInicialMujeres) AS total FROM matricula WHERE CodigoUDI = '01-08-2925-43' GROUP BY Anio
-                        db.transaction(
-                            function(tx){
-                                  tx.executeSql('SELECT Anio, SUM(InscritosInicialHombres + InscritosInicialMujeres) AS total FROM matricula WHERE CodigoUDI = ? GROUP BY Anio', 
-                                  [info.CodigoUDI],
-                                  function(tx,r){
-                                    var data = [];
-                                    if(r.rows.length > 0){
-                                        for(var i = 0; i<r.rows.length; i++){
-                                            data.push(r.rows.item(i).total);
-                                        }
+                    window.localStorage.setItem("totalesMatriculaInicial",JSON.stringify(totalesMatriculaInicial));
+                    window.localStorage.setItem("totalesMatriculaInicialHombres",JSON.stringify(inscripcionInicialHombres));
+                    window.localStorage.setItem("totalesMatriculaInicialMujeres",JSON.stringify(inscripcionInicialMujeres));
+                    
+                    window.localStorage.setItem("acumuladoRepitentes",JSON.stringify(acumuladoRepitentes));
+                    window.localStorage.setItem("acumuladoRepitentes",JSON.stringify(acumuladoRepitentes));
+                    window.localStorage.setItem("acumuladoRepitentes",JSON.stringify(acumuladoRepitentes));
 
-                                        window.localStorage.setItem("totalesMatriculaInicial",JSON.stringify(data));
-                                    }
-                                     
-                                  },
-                                  function(tx,e){
-                                     alert("Error" + e.message); 
-                                      return false; 
-                                  });
-                              },
-                              function(tx,e){
-                                  alert("Error al procesar SQL: " + e.code + " : " + e.message);
-                                  return false;
-                              }
-                            )
-                    }
+                    window.localStorage.setItem("acumuladoInscripcionFinal",JSON.stringify(acumuladoInscripcionFinal));
+                    window.localStorage.setItem("RepitentesHombres",JSON.stringify(inscripcionFinalHombres));
+                    window.localStorage.setItem("RepitentesMujeres",JSON.stringify(inscripcionFinalMujeres));
 
+                    window.localStorage.setItem("acumuladoRetirados",JSON.stringify(acumuladoRetirados));
+                    window.localStorage.setItem("RetiradosHombres",JSON.stringify(retiradosHombres));
+                    window.localStorage.setItem("RetiradosMujeres",JSON.stringify(retiradosMujeres));                    
 
-                    function getTotalInscripcionInicialDataGenero(){
-                        db.transaction(
-                            function(tx){
-                                tx.executeSql('SELECT Anio, SUM(InscritosInicialHombres) AS hombres, SUM(InscritosInicialMujeres) AS mujeres FROM matricula WHERE CodigoUDI = ? GROUP BY Anio',                                   
-                                  [info.CodigoUDI],
-                                  function(tx,r){
-                                    var dataM = [];
-                                    var dataH = [];
-                                    if(r.rows.length > 0){
-                                        for(var i = 0; i<r.rows.length; i++){
-                                            dataM.push(r.rows.item(i).mujeres);
-                                            dataH.push(r.rows.item(i).hombres);
-                                        }
+                    window.localStorage.setItem("acumuladoPromovidos",JSON.stringify(acumuladoPromovidos));
+                    window.localStorage.setItem("acumuladoPromovidos",JSON.stringify(acumuladoPromovidos));
+                    window.localStorage.setItem("acumuladoPromovidos",JSON.stringify(acumuladoPromovidos));
+                    
+                    window.localStorage.setItem("acumuladoNoPromovidos",JSON.stringify(acumuladoNoPromovidos));
+                    window.localStorage.setItem("NoPromovidosHombres",JSON.stringify(noPromovidosHombres));
+                    window.localStorage.setItem("NoPromovidosMujeres",JSON.stringify(noPromovidosMujeres));
 
-                                        window.localStorage.setItem("totalesMatriculaInicialHombres",JSON.stringify(dataH));
-                                        window.localStorage.setItem("totalesMatriculaInicialMujeres",JSON.stringify(dataM));                                        
-                                    }
-                                     
-                                  },
-                                  function(tx,e){
-                                     alert("Error" + e.message); 
-                                      return false; 
-                                  });
-                              },
-                              function(tx,e){
-                                  alert("Error al procesar SQL: " + e.code + " : " + e.message);
-                                  return false;
-                              }
-                            )
-                    }
+                    
+                  }
+                } );
 
-                    function getInscripcionInicialDetalle(){
-                        db.transaction(
-                            function(tx){
-                                tx.executeSql('SELECT Anio, grado, SUM(InscritosInicialHombres) AS hombres, SUM(InscritosInicialMujeres) AS mujeres FROM matricula WHERE CodigoUDI = ? GROUP BY Anio, grado',                                    
-                                  [info.CodigoUDI],
-                                  function(tx,r){
-                                    var data = [];
-                                    if(r.rows.length > 0){
-                                        for(var i = 0; i<r.rows.length; i++){
-                                            //data.push(JSON.stringify(r.rows.item(i)));
-                                            data.push(r.rows.item(i));
-                                        }
-                                        window.localStorage.setItem("matriculaInicialDetalle",JSON.stringify(data));
-                                    }
-                                     
-                                  },
-                                  function(tx,e){
-                                     alert("Error" + e.message); 
-                                      return false; 
-                                  });
-                              },
-                              function(tx,e){
-                                  alert("Error al procesar SQL: " + e.message);
-                                  return false;
-                              }
-                            )
-                    }
+                window.getMatriculaHistoricaDetalle(info.CodigoUDI, function (datos){
+                  var json = JSON.parse(datos);
+                  if(json.length > 0){
+                    window.localStorage.setItem("matriculaDetalle",JSON.stringify(json));
+                  }
+
+                });
 
 
-
-                    function getRepitentesData(){
-                        db.transaction(
-                            function(tx){
-                                  tx.executeSql('SELECT Anio, SUM(RepitentesHombres + RepitentesMujeres) AS total FROM matricula WHERE CodigoUDI = ? GROUP BY Anio', 
-                                  [info.CodigoUDI],
-                                  function(tx,r){
-                                    var data = [];
-                                    if(r.rows.length > 0){
-                                        for(var i = 0; i<r.rows.length; i++){
-                                            data.push(r.rows.item(i).total);
-                                        }
-                                        window.localStorage.setItem("acumuladoRepitentes",JSON.stringify(data));
-                                    }                                     
-                                  },
-                                  function(tx,e){
-                                     alert("Error" + e.message); 
-                                      return false; 
-                                  });
-                              },
-                              function(tx,e){
-                                  alert("Error al procesar SQL: " + e.code + " : " + e.message);
-                                  return false;
-                              }
-                            )
-                    }
-
-
-                    function getRepitentesDataGenero(){
-                        db.transaction(
-                            function(tx){
-                                tx.executeSql('SELECT Anio, SUM(RepitentesHombres) AS hombres, SUM(RepitentesMujeres) AS mujeres FROM matricula WHERE CodigoUDI = ? GROUP BY Anio',                                   
-                                  [info.CodigoUDI],
-                                  function(tx,r){
-                                    var dataM = [];
-                                    var dataH = [];
-                                    if(r.rows.length > 0){
-                                        for(var i = 0; i<r.rows.length; i++){
-                                            dataM.push(r.rows.item(i).mujeres);
-                                            dataH.push(r.rows.item(i).hombres);
-                                        }
-                                        window.localStorage.setItem("RepitentesHombres",JSON.stringify(dataH));
-                                        window.localStorage.setItem("RepitentesMujeres",JSON.stringify(dataM));
-                                    }                                     
-                                  },
-                                  function(tx,e){
-                                     alert("Error" + e.message); 
-                                      return false; 
-                                  });
-                              },
-                              function(tx,e){
-                                  alert("Error al procesar SQL: " + e.code + " : " + e.message);
-                                  return false;
-                              }
-                            )
-                    }
-
-                    function getRepitentesDetalle(){
-                        db.transaction(
-                            function(tx){
-                                tx.executeSql('SELECT Anio, grado, SUM(RepitentesHombres) AS hombres, SUM(RepitentesMujeres) AS mujeres FROM matricula WHERE CodigoUDI = ? GROUP BY Anio, grado',                                    
-                                  [info.CodigoUDI],
-                                  function(tx,r){
-                                    var data = [];
-                                    if(r.rows.length > 0){
-                                        for(var i = 0; i<r.rows.length; i++){
-                                            //data.push(JSON.stringify(r.rows.item(i)));
-                                            data.push(r.rows.item(i));
-                                        }
-                                        window.localStorage.setItem("repitentesDetalle",JSON.stringify(data));
-                                    }                                     
-                                  },
-                                  function(tx,e){
-                                     alert("Error" + e.message); 
-                                      return false; 
-                                  });
-                              },
-                              function(tx,e){
-                                  alert("Error al procesar SQL: " + e.message);
-                                  return false;
-                              }
-                            )
-                    }
-
-
-
-                    //Datos de la inscripcion final
-                    function getInscripcionFinalData(){
-                        db.transaction(
-                            function(tx){
-                                  tx.executeSql('SELECT Anio, SUM(InscritosFinalHombres + InscritosFinalMujeres) AS total FROM matricula WHERE CodigoUDI = ? GROUP BY Anio', 
-                                  [info.CodigoUDI],
-                                  function(tx,r){
-                                    var data = [];
-                                    if(r.rows.length > 0){
-                                        for(var i = 0; i<r.rows.length; i++){
-                                            data.push(r.rows.item(i).total);
-                                        }
-                                        window.localStorage.setItem("acumuladoInscripcionFinal",JSON.stringify(data));
-                                    }                                     
-                                  },
-                                  function(tx,e){
-                                     alert("Error" + e.message); 
-                                      return false; 
-                                  });
-                              },
-                              function(tx,e){
-                                  alert("Error al procesar SQL: " + e.code + " : " + e.message);
-                                  return false;
-                              }
-                            )
-                    }
-
-
-                    function getInscritosFinalGenero(){
-                        db.transaction(
-                            function(tx){
-                                tx.executeSql('SELECT Anio, SUM(InscritosFinalHombres) AS hombres, SUM(InscritosFinalMujeres) AS mujeres FROM matricula WHERE CodigoUDI = ? GROUP BY Anio',                                   
-                                  [info.CodigoUDI],
-                                  function(tx,r){
-                                    var dataM = [];
-                                    var dataH = [];
-                                    if(r.rows.length > 0){
-                                        for(var i = 0; i<r.rows.length; i++){
-                                            dataM.push(r.rows.item(i).mujeres);
-                                            dataH.push(r.rows.item(i).hombres);
-                                        }
-                                        window.localStorage.setItem("InscritosFinalHombres",JSON.stringify(dataH));
-                                        window.localStorage.setItem("InscritosFinalMujeres",JSON.stringify(dataM));
-                                    }                                     
-                                  },
-                                  function(tx,e){
-                                     alert("Error" + e.message); 
-                                      return false; 
-                                  });
-                              },
-                              function(tx,e){
-                                  alert("Error al procesar SQL: " + e.code + " : " + e.message);
-                                  return false;
-                              }
-                            )
-                    }
-
-                    function getInscritosFinalDetalle() {
-                        db.transaction(
-                            function(tx){
-                                tx.executeSql('SELECT Anio, grado, SUM(InscritosFinalHombres) AS hombres, SUM(InscritosFinalMujeres) AS mujeres FROM matricula WHERE CodigoUDI = ? GROUP BY Anio, grado',                                    
-                                  [info.CodigoUDI],
-                                  function(tx,r){
-                                    var data = [];
-                                    if(r.rows.length > 0){
-                                        for(var i = 0; i<r.rows.length; i++){
-                                            //data.push(JSON.stringify(r.rows.item(i)));
-                                            data.push(r.rows.item(i));
-                                        }
-                                        window.localStorage.setItem("InscritosFinalDetalle",JSON.stringify(data));
-                                    }                                     
-                                  },
-                                  function(tx,e){
-                                     alert("Error" + e.message); 
-                                      return false; 
-                                  });
-                              },
-                              function(tx,e){
-                                  alert("Error al procesar SQL: " + e.message);
-                                  return false;
-                              }
-                            )
-                    }
-
-
-
-                    //Datos de Retirados
-                    function getRetiradosData(){
-                        db.transaction(
-                            function(tx){
-                                  tx.executeSql('SELECT Anio, SUM(RetiradosHombres + RetiradosMujeres) AS total FROM matricula WHERE CodigoUDI = ? GROUP BY Anio', 
-                                  [info.CodigoUDI],
-                                  function(tx,r){
-                                    var data = [];
-                                    if(r.rows.length > 0){
-                                        for(var i = 0; i<r.rows.length; i++){
-                                            data.push(r.rows.item(i).total);
-                                        }
-                                        window.localStorage.setItem("acumuladoRetirados",JSON.stringify(data));
-                                    }                                     
-                                  },
-                                  function(tx,e){
-                                     alert("Error" + e.message); 
-                                      return false; 
-                                  });
-                              },
-                              function(tx,e){
-                                  alert("Error al procesar SQL: " + e.code + " : " + e.message);
-                                  return false;
-                              }
-                            )
-                    }
-
-
-                    function getRetiradosGenero(){
-                        db.transaction(
-                            function(tx){
-                                tx.executeSql('SELECT Anio, SUM(RetiradosHombres) AS hombres, SUM(RetiradosMujeres) AS mujeres FROM matricula WHERE CodigoUDI = ? GROUP BY Anio',                                   
-                                  [info.CodigoUDI],
-                                  function(tx,r){
-                                    var dataM = [];
-                                    var dataH = [];
-                                    if(r.rows.length > 0){
-                                        for(var i = 0; i<r.rows.length; i++){
-                                            dataM.push(r.rows.item(i).mujeres);
-                                            dataH.push(r.rows.item(i).hombres);
-                                        }
-                                        window.localStorage.setItem("RetiradosHombres",JSON.stringify(dataH));
-                                        window.localStorage.setItem("RetiradosMujeres",JSON.stringify(dataM));
-                                    }                                     
-                                  },
-                                  function(tx,e){
-                                     alert("Error" + e.message); 
-                                      return false; 
-                                  });
-                              },
-                              function(tx,e){
-                                  alert("Error al procesar SQL: " + e.code + " : " + e.message);
-                                  return false;
-                              }
-                            )
-                    }
-
-                    function getRetiradosDetalle() {
-                        db.transaction(
-                            function(tx){
-                                tx.executeSql('SELECT Anio, grado, SUM(RetiradosHombres) AS hombres, SUM(RetiradosMujeres) AS mujeres FROM matricula WHERE CodigoUDI = ? GROUP BY Anio, grado',                                    
-                                  [info.CodigoUDI],
-                                  function(tx,r){
-                                    var data = [];
-                                    if(r.rows.length > 0){
-                                        for(var i = 0; i<r.rows.length; i++){
-                                            //data.push(JSON.stringify(r.rows.item(i)));
-                                            data.push(r.rows.item(i));
-                                        }
-                                        window.localStorage.setItem("retiradosDetalle",JSON.stringify(data));
-                                    }                                     
-                                  },
-                                  function(tx,e){
-                                     alert("Error" + e.message); 
-                                      return false; 
-                                  });
-                              },
-                              function(tx,e){
-                                  alert("Error al procesar SQL: " + e.message);
-                                  return false;
-                              }
-                            )
-                    }
-
-
-                    //Datos de Promovidos
-                    function getPromovidosData(){
-                        db.transaction(
-                            function(tx){
-                                  tx.executeSql('SELECT Anio, SUM(PromovidosHombres + PromovidosMujeres) AS total FROM matricula WHERE CodigoUDI = ? GROUP BY Anio', 
-                                  [info.CodigoUDI],
-                                  function(tx,r){
-                                    var data = [];
-                                    if(r.rows.length > 0){
-                                        for(var i = 0; i<r.rows.length; i++){
-                                            data.push(r.rows.item(i).total);
-                                        }
-                                        window.localStorage.setItem("acumuladoPromovidos",JSON.stringify(data));
-                                    }                                     
-                                  },
-                                  function(tx,e){
-                                     alert("Error" + e.message); 
-                                      return false; 
-                                  });
-                              },
-                              function(tx,e){
-                                  alert("Error al procesar SQL: " + e.code + " : " + e.message);
-                                  return false;
-                              }
-                            )
-                    }
-
-
-                    function getPromovidosGenero(){
-                        db.transaction(
-                            function(tx){
-                                tx.executeSql('SELECT Anio, SUM(PromovidosHombres) AS hombres, SUM(PromovidosMujeres) AS mujeres FROM matricula WHERE CodigoUDI = ? GROUP BY Anio',                                   
-                                  [info.CodigoUDI],
-                                  function(tx,r){
-                                    var dataM = [];
-                                    var dataH = [];
-                                    if(r.rows.length > 0){
-                                        for(var i = 0; i<r.rows.length; i++){
-                                            dataM.push(r.rows.item(i).mujeres);
-                                            dataH.push(r.rows.item(i).hombres);
-                                        }
-                                        window.localStorage.setItem("PromovidosHombres",JSON.stringify(dataH));
-                                        window.localStorage.setItem("PromovidosMujeres",JSON.stringify(dataM));
-                                    }                                     
-                                  },
-                                  function(tx,e){
-                                     alert("Error" + e.message); 
-                                      return false; 
-                                  });
-                              },
-                              function(tx,e){
-                                  alert("Error al procesar SQL: " + e.code + " : " + e.message);
-                                  return false;
-                              }
-                            )
-                    }                    
-
-                    function getPromovidosDetalle() {
-                        db.transaction(
-                            function(tx){
-                                tx.executeSql('SELECT Anio, grado, SUM(PromovidosHombres) AS hombres, SUM(PromovidosMujeres) AS mujeres FROM matricula WHERE CodigoUDI = ? GROUP BY Anio, grado',                                    
-                                  [info.CodigoUDI],
-                                  function(tx,r){
-                                    var data = [];
-                                    if(r.rows.length > 0){
-                                        for(var i = 0; i<r.rows.length; i++){
-                                            //data.push(JSON.stringify(r.rows.item(i)));
-                                            data.push(r.rows.item(i));
-                                        }
-                                        window.localStorage.setItem("promovidosDetalle",JSON.stringify(data));
-                                    }                                     
-                                  },
-                                  function(tx,e){
-                                     alert("Error" + e.message); 
-                                      return false; 
-                                  });
-                              },
-                              function(tx,e){
-                                  alert("Error al procesar SQL: " + e.message);
-                                  return false;
-                              }
-                            )
-                    }
-
-
-                    //Datos de No Promovidos
-                    function getNoPromovidosData(){
-                        db.transaction(
-                            function(tx){
-                                  tx.executeSql('SELECT Anio, SUM(NoPromovidosHombres + NoPromovidosMujeres) AS total FROM matricula WHERE CodigoUDI = ? GROUP BY Anio', 
-                                  [info.CodigoUDI],
-                                  function(tx,r){
-                                    var data = [];
-                                    if(r.rows.length > 0){
-                                        for(var i = 0; i<r.rows.length; i++){
-                                            data.push(r.rows.item(i).total);
-                                        }
-                                        window.localStorage.setItem("acumuladoNoPromovidos",JSON.stringify(data));
-                                    }                                     
-                                  },
-                                  function(tx,e){
-                                     alert("Error" + e.message); 
-                                      return false; 
-                                  });
-                              },
-                              function(tx,e){
-                                  alert("Error al procesar SQL: " + e.code + " : " + e.message);
-                                  return false;
-                              }
-                            )
-                    }
-
-
-                    function getNoPromovidosGenero(){
-                        db.transaction(
-                            function(tx){
-                                tx.executeSql('SELECT Anio, SUM(NoPromovidosHombres) AS hombres, SUM(NoPromovidosMujeres) AS mujeres FROM matricula WHERE CodigoUDI = ? GROUP BY Anio',                                   
-                                  [info.CodigoUDI],
-                                  function(tx,r){
-                                    var dataM = [];
-                                    var dataH = [];
-                                    if(r.rows.length > 0){
-                                        for(var i = 0; i<r.rows.length; i++){
-                                            dataM.push(r.rows.item(i).mujeres);
-                                            dataH.push(r.rows.item(i).hombres);
-                                        }
-                                        window.localStorage.setItem("NoPromovidosHombres",JSON.stringify(dataH));
-                                        window.localStorage.setItem("NoPromovidosMujeres",JSON.stringify(dataM));
-                                    }                                     
-                                  },
-                                  function(tx,e){
-                                     alert("Error" + e.message); 
-                                      return false; 
-                                  });
-                              },
-                              function(tx,e){
-                                  alert("Error al procesar SQL: " + e.code + " : " + e.message);
-                                  return false;
-                              }
-                            )
-                    }                    
-
-                    function getNoPromovidosDetalle() {
-                        db.transaction(
-                            function(tx){
-                                tx.executeSql('SELECT Anio, grado, SUM(NoPromovidosHombres) AS hombres, SUM(NoPromovidosMujeres) AS mujeres FROM matricula WHERE CodigoUDI = ? GROUP BY Anio, grado',                                    
-                                  [info.CodigoUDI],
-                                  function(tx,r){
-                                    var data = [];
-                                    if(r.rows.length > 0){
-                                        for(var i = 0; i<r.rows.length; i++){
-                                            //data.push(JSON.stringify(r.rows.item(i)));
-                                            data.push(r.rows.item(i));
-                                        }
-                                        window.localStorage.setItem("noPromovidosDetalle",JSON.stringify(data));
-                                    }                                     
-                                  },
-                                  function(tx,e){
-                                     alert("Error" + e.message); 
-                                      return false; 
-                                  });
-                              },
-                              function(tx,e){
-                                  alert("Error al procesar SQL: " + e.message);
-                                  return false;
-                              }
-                            )
-                    }
+              });
+                    /**/
 
 
             });
